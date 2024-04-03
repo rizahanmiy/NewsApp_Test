@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="KecipirMultiStateView">
+        <attr name="viewState" format="enum">
+            <enum name="content" value="0"/>
+            <enum name="error" value="1"/>
+            <enum name="empty" value="2"/>
+            <enum name="loading" value="3"/>
+        </attr>
+        <attr name="loadingView" format="reference"/>
+        <attr name="contentView" format="reference"/>
+        <attr name="emptyView" format="reference"/>
+        <attr name="notRegisteredView" format="reference"/>
+        <attr name="errorView" format="reference"/>
+        <attr name="animateViewChanges" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="MovableButtonView">
+        <attr format="string" name="count"/>
+        <attr format="reference" name="image"/>
+        <attr format="reference" name="hide"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomTresholdProgressBar">
+        <attr name="dividerColor" format="color" />
+        <attr name="progressBarBackgroundColor" format="color" />
+        <attr name="progressBarColor" format="color" />
+        <attr name="dividerWidth" format="dimension" />
+        <attr name="isDividerEnabled" format="boolean" />
+        <attr name="divisions" format="integer" />
+        <attr name="cornerRadius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomTresholdSeekBar">
+        <attr name="hint_text_size" format="dimension"/>
+        <attr name="hint_text_color" format="color" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,174 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+ext.versionMajor = 1
+ext.versionMinor = 0
+ext.versionPatch = 0
+ext.versionClassifier = null
+ext.isSnapshot = false
+ext.minimumSdkVersion = 23
+ext.targetSdkVersion = 33
+
+android {
+    namespace 'com.rizahanmiy.newsapp'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.rizahanmiy.newsapp"
+        minSdkVersion  project.ext.minimumSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        versionCode generateVersionCode()
+        versionName generateVersionName()
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
+    }
+
+    signingConfigs {
+        config {
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+        }
+        staging {
+            debuggable true
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        production {
+            dimension "default"
+            manifestPlaceholders = [appLabel: "News App"]
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "SERVER_URL", '"https://newsapi.org/v2/"'
+            buildConfigField "String", "API_KEY", '"4a53dd02c27a467398bdbfc14a1a65b5"'
+        }
+        development {
+            manifestPlaceholders = [appLabel: "Dev News App"]
+            applicationIdSuffix ".dev"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "SERVER_URL", '"https://newsapi.org/v2/"'
+            buildConfigField "String", "API_KEY", '"4a53dd02c27a467398bdbfc14a1a65b5"'
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    packagingOptions {
+        resources {
+            pickFirsts += ['META-INF/LICENSE.txt']
+        }
+        ('META-INF/LICENSE')
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName = "News App-${variant.buildType.name}-v${versionCode}_${versionName}-${new Date().format('ddMMMyyyy_HH-mm')}.apk"
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    //AndroidX Activity
+    implementation 'androidx.activity:activity-ktx:1.6.1'
+
+    //Layout
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.google.android.material:material:1.9.0'
+
+    //Work
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    implementation 'android.arch.work:work-runtime:1.0.1'
+
+    //lifecycle & LiveData
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-reactivestreams-ktx:2.5.1'
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
+
+    //glide
+    implementation "com.github.bumptech.glide:glide:4.15.1"
+    kapt 'com.github.bumptech.glide:compiler:4.15.1'
+    implementation('com.github.bumptech.glide:glide:4.15.1@aar') {
+        transitive = true
+    }
+
+    //dagger
+    implementation 'com.google.dagger:dagger:2.44.2'
+    implementation 'com.google.dagger:dagger-android:2.44.2'
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:$gsonVersion"
+
+    //okhttp
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.11'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.11'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11'
+    implementation 'com.squareup.okio:okio:3.2.0'
+}
+
+
+private Integer generateVersionCode() {
+    return ext.versionMajor * 100000 + ext.versionMinor * 100 + ext.versionPatch
+}
+
+private String generateVersionName() {
+    String versionName = "${ext.versionMajor}.${ext.versionMinor}.${ext.versionPatch}"
+    if (ext.versionClassifier == null && ext.isSnapshot) {
+        ext.versionClassifier = "SNAPSHOT"
+    }
+
+    if (ext.versionClassifier != null) {
+        versionName += "-" + ext.versionClassifier
+    }
+    return versionName
+}
